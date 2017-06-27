@@ -1,36 +1,50 @@
 package com.finepointmobile.cameratest;
 
+import android.arch.lifecycle.LifecycleActivity;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
-public class MainActivity extends AppCompatActivity {
+import static com.finepointmobile.cameratest.R.id.fab;
+
+public class MainActivity extends LifecycleActivity {
+
+    private static final String TAG = "MainActivity";
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
     ImageView mImage;
+    FloatingActionButton mFab;
+    CameraViewModel mModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
 
         mImage = (ImageView) findViewById(R.id.image);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        Log.d(TAG, "onCreate: in ONCREATE");
+
+
+        mFab = (FloatingActionButton) findViewById(fab);
+        mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dispatchTakePictureIntent();
             }
         });
+
+        mModel = ViewModelProviders.of(this).get(CameraViewModel.class);
+
+//        mModel.getImage().observe();
     }
 
     @Override
@@ -39,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             mImage.setImageBitmap(imageBitmap);
+            mModel.setImage(imageBitmap);
         }
     }
 
