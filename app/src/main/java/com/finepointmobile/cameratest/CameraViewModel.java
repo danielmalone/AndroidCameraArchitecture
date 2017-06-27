@@ -1,5 +1,6 @@
 package com.finepointmobile.cameratest;
 
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.graphics.Bitmap;
 
@@ -9,13 +10,13 @@ import android.graphics.Bitmap;
 
 public class CameraViewModel extends ViewModel {
 
-    private Bitmap mImage;
-
-    public Bitmap getImage() {
-        return mImage;
-    }
+    private final MutableLiveData<Bitmap> mImage = new MutableLiveData<>();
 
     public void setImage(Bitmap image) {
-        mImage = image;
+        mImage.setValue(image);
+    }
+
+    public MutableLiveData<Bitmap> getImage() {
+        return mImage;
     }
 }
